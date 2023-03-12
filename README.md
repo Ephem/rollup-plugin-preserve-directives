@@ -29,7 +29,7 @@ export default {
 };
 ```
 
-If you are using a minifier like terser, make sure that is not removing this comment. In terser, you can set [`compress.directives`](https://terser.org/docs/api-reference#compress-options) to `false`.
+If you are using a minifier like terser, make sure that is not removing the directive again. In terser, you can set [`compress.directives`](https://terser.org/docs/api-reference#compress-options) to `false`.
 
 ## Disabling warnings
 
