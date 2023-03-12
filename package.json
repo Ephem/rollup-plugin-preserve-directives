@@ -1,14 +1,23 @@
 {
   "name": "rollup-plugin-preserve-directives",
   "description": "A Rollup plugin to preserve directives like \"use client\" when preserveModules is true.",
-  "version": "0.1.0",
+  "version": "0.0.1",
   "author": "Fredrik Höglund <fredrik.hoglund@gmail.com>",
   "license": "MIT",
   "keywords": [
     "rollup-plugin"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Ephem/rollup-plugin-preserve-directives.git"
+  },
+  "homepage": "https://github.com/Ephem/rollup-plugin-preserve-directives#readme",
+  "bugs": "https://github.com/Ephem/rollup-plugin-preserve-directives/issues",
   "scripts": {
     "build": "tsc",
     "watch": "tsc --watch"
