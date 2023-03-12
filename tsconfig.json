@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "lib": ["es2017"],
+    "target": "ES2015",
+    "module": "commonjs",
+    "declaration": true,
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "outDir": "dist/"
+  },
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "files": ["src/index.ts"]
+}

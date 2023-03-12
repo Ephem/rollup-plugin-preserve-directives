@@ -1,0 +1,30 @@
+{
+  "name": "rollup-plugin-preserve-directives",
+  "description": "A Rollup plugin to preserve directives like \"use client\" when preserveModules is true.",
+  "version": "0.1.0",
+  "author": "Fredrik Höglund <fredrik.hoglund@gmail.com>",
+  "license": "MIT",
+  "keywords": [
+    "rollup-plugin"
+  ],
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc --watch"
+  },
+  "peerDependencies": {
+    "rollup": "2.x || 3.x"
+  },
+  "devDependencies": {
+    "magic-string": "^0.30.0",
+    "rollup": "^3.19.1",
+    "typescript": "^4.9.5"
+  },
+  "files": [
+    "dist/index.js",
+    "dist/index.d.ts",
+    "README.md",
+    "LICENSE"
+  ]
+}
