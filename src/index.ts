@@ -31,7 +31,7 @@ export default function preserveDirectives({
         const directives: string[] = [];
         let i = 0;
 
-        while (ast.body?.[i].type === "ExpressionStatement") {
+        while (ast.body?.[i]?.type === "ExpressionStatement") {
           const node = ast.body[i];
           if (node.directive) {
             directives.push(node.directive);
