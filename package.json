@@ -25,8 +25,10 @@
   "peerDependencies": {
     "rollup": "2.x || 3.x"
   },
+  "dependencies": {
+    "magic-string": "^0.30.0"
+  },
   "devDependencies": {
-    "magic-string": "^0.30.0",
     "rollup": "^3.19.1",
     "typescript": "^4.9.5"
   },
