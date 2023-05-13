@@ -27,12 +27,17 @@ export default function preserveDirectives({
     transform(code) {
       const ast = this.parse(code) as ExtendedAcornNode;
 
-      if (ast.type === "Program") {
+      if (ast.type === "Program" && ast.body) {
         const directives: string[] = [];
         let i = 0;
 
-        while (ast.body?.[i]?.type === "ExpressionStatement") {
-          const node = ast.body[i];
+        // Nodes in body should never be falsy, but issue #5 tells us otherwise
+        // so just in case we filter them out here
+        const filteredBody = ast.body.filter(Boolean);
+
+        // .type must be defined according to the spec, but just in case..
+        while (filteredBody[i]?.type === "ExpressionStatement") {
+          const node = filteredBody[i];
           if (node.directive) {
             directives.push(node.directive);
           }
