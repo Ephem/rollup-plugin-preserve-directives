@@ -5,6 +5,9 @@ import MagicString from "magic-string";
 type ExtendedAcornNode = AcornNode & {
   body?: ExtendedAcornNode[];
   directive?: string;
+  expression?: {
+    value: string
+  }
 };
 
 type PreserveDirectivesOptions = {
@@ -29,20 +32,17 @@ export default function preserveDirectives({
 
       if (ast.type === "Program" && ast.body) {
         const directives: string[] = [];
-        let i = 0;
 
         // Nodes in body should never be falsy, but issue #5 tells us otherwise
         // so just in case we filter them out here
         const filteredBody = ast.body.filter(Boolean);
 
         // .type must be defined according to the spec, but just in case..
-        while (filteredBody[i]?.type === "ExpressionStatement") {
-          const node = filteredBody[i];
-          if (node.directive) {
-            directives.push(node.directive);
+        filteredBody.forEach(node => {
+          if (node.type === 'ExpressionStatement' && node.expression?.value === 'use client') {
+            directives.push(node.expression.value);
           }
-          i += 1;
-        }
+        })
 
         if (directives.length > 0) {
           return {
