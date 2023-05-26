@@ -8,7 +8,7 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "outDir": "dist/"
+    "noEmit": true
   },
   "$schema": "https://json.schemastore.org/tsconfig",
   "files": ["src/index.ts"]
