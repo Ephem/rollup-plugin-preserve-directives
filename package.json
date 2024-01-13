@@ -40,7 +40,7 @@
     "watch": "npm run build --watch"
   },
   "peerDependencies": {
-    "rollup": "4.x"
+    "rollup": "2.x || 3.x || 4.x"
   },
   "dependencies": {
     "magic-string": "^0.30.5"
