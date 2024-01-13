@@ -10,15 +10,21 @@
   "publishConfig": {
     "access": "public"
   },
-  "type": "commonjs",
+  "type": "module",
   "types": "dist/index.d.ts",
-  "main": "dist/index.js",
-  "module": "dist/index.mjs",
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
   "exports": {
+    
     ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.js"
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
     },
     "./package.json": "./package.json"
   },
@@ -34,15 +40,15 @@
     "watch": "npm run build --watch"
   },
   "peerDependencies": {
-    "rollup": "2.x || 3.x"
+    "rollup": "2.x || 3.x || 4.x"
   },
   "dependencies": {
-    "magic-string": "^0.30.0"
+    "magic-string": "^0.30.5"
   },
   "devDependencies": {
-    "rollup": "^3.19.1",
-    "tsup": "^6.7.0",
-    "typescript": "^4.9.5"
+    "rollup": "^4.9.5",
+    "tsup": "^8.0.1",
+    "typescript": "^5.3.3"
   },
   "files": [
     "dist",
