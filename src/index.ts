@@ -1,11 +1,5 @@
-import { Plugin, AcornNode } from "rollup";
 import MagicString from "magic-string";
-
-// The AcornNode type is very limited, so we define what we need here
-type ExtendedAcornNode = AcornNode & {
-  body?: ExtendedAcornNode[];
-  directive?: string;
-};
+import type { Plugin } from "rollup";
 
 type PreserveDirectivesOptions = {
   supressPreserveModulesWarning?: boolean;
@@ -18,14 +12,14 @@ type PreserveDirectivesOptions = {
  * @param {Object} options - Plugin options
  * @param {boolean} options.supressPreserveModulesWarning - Disable the warning when preserveModules is false
  */
-export default function preserveDirectives({
+export function preserveDirectives({
   supressPreserveModulesWarning,
 }: PreserveDirectivesOptions = {}): Plugin {
   return {
     name: "preserve-directives",
     // Capture directives metadata during the transform phase
     transform(code) {
-      const ast = this.parse(code) as ExtendedAcornNode;
+      const ast = this.parse(code);
 
       if (ast.type === "Program" && ast.body) {
         const directives: string[] = [];
@@ -38,7 +32,7 @@ export default function preserveDirectives({
         // .type must be defined according to the spec, but just in case..
         while (filteredBody[i]?.type === "ExpressionStatement") {
           const node = filteredBody[i];
-          if (node.directive) {
+          if ('directive' in node) {
             directives.push(node.directive);
           }
           i += 1;
@@ -107,3 +101,5 @@ export default function preserveDirectives({
     },
   };
 }
+
+export default preserveDirectives
