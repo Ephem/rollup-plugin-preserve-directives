@@ -2,7 +2,7 @@ import MagicString from "magic-string";
 import type { Plugin } from "rollup";
 
 type PreserveDirectivesOptions = {
-  supressPreserveModulesWarning?: boolean;
+  suppressPreserveModulesWarning?: boolean;
 };
 
 /**
@@ -10,10 +10,11 @@ type PreserveDirectivesOptions = {
  * Can only be used with preserveModules: true.
  *
  * @param {Object} options - Plugin options
- * @param {boolean} options.supressPreserveModulesWarning - Disable the warning when preserveModules is false
+ * @param {boolean} options.suppressPreserveModulesWarning - Disable the warning when preserveModules is false
  */
+
 export function preserveDirectives({
-  supressPreserveModulesWarning,
+  suppressPreserveModulesWarning,
 }: PreserveDirectivesOptions = {}): Plugin {
   return {
     name: "preserve-directives",
@@ -62,7 +63,7 @@ export function preserveDirectives({
       order: "post",
       handler(code, chunk, options) {
         if (!options.preserveModules) {
-          if (!supressPreserveModulesWarning) {
+          if (!suppressPreserveModulesWarning) {
             this.warn(
               "This plugin only works with the option preserveModules: true, if you want to add directives to the top of a bundled build, add it in a banner."
             );

@@ -43,7 +43,7 @@ Maybe this plugin could hide that warning by default in the future, but for now 
 
 ### rollup-plugin-preserve-directives warning
 
-This plugin currently warns when it's used in a build that has `preserveModules` false, since it does nothing then. If you for some reason want to supress this warning, you can pass the option `supressPreserveModulesWarning: true` in the config:
+This plugin currently warns when it's used in a build that has `preserveModules` false, since it does nothing then. If you for some reason want to suppress this warning, you can pass the option `suppressPreserveModulesWarning: true` in the config:
 
 ```js
 import preserveDirectives from "rollup-plugin-preserve-directives";
@@ -52,8 +52,8 @@ export default {
   output: {
     preserveModules: false,
   },
-  // This supresses the warning, but the plugin does nothing
-  plugins: [preserveDirectives({ supressPreserveModulesWarning: true })],
+  // This suppresses the warning, but the plugin does nothing
+  plugins: [preserveDirectives({ suppressPreserveModulesWarning: true })],
 };
 ```
 
@@ -76,6 +76,6 @@ Here are some random todos:
 
 - Tests
 - Prettier/Linting/EditorConfig
-- If possible: Supress the Rollup warning when this plugin is used
-  - Perhaps we should instead/also export a custom `onwarn` handler that supresses the warning if people want to add that to any builds that are not using this plugin? (If this plugin is used in one build, the directive is probably not a problem in the other build)
+- If possible: Suppress the Rollup warning when this plugin is used
+  - Perhaps we should instead/also export a custom `onwarn` handler that suppresses the warning if people want to add that to any builds that are not using this plugin? (If this plugin is used in one build, the directive is probably not a problem in the other build)
 - Versioning, release pipeline, changelog etc
