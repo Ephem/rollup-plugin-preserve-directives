@@ -19,39 +19,40 @@ export function preserveDirectives({
   return {
     name: "preserve-directives",
     // Capture directives metadata during the transform phase
-    transform(code) {
-      const ast = this.parse(code);
+    transform(code, id) {
+      if (!id.endsWith('.css')) {
+        const ast = this.parse(code);
+        if (ast.type === "Program" && ast.body) {
+          const directives: string[] = [];
+          let i = 0;
 
-      if (ast.type === "Program" && ast.body) {
-        const directives: string[] = [];
-        let i = 0;
+          // Nodes in body should never be falsy, but issue #5 tells us otherwise
+          // so just in case we filter them out here
+          const filteredBody = ast.body.filter(Boolean);
 
-        // Nodes in body should never be falsy, but issue #5 tells us otherwise
-        // so just in case we filter them out here
-        const filteredBody = ast.body.filter(Boolean);
-
-        // .type must be defined according to the spec, but just in case..
-        while (filteredBody[i]?.type === "ExpressionStatement") {
-          const node = filteredBody[i];
-          if ('directive' in node) {
-            directives.push(node.directive);
+          // .type must be defined according to the spec, but just in case..
+          while (filteredBody[i]?.type === "ExpressionStatement") {
+            const node = filteredBody[i];
+            if ('directive' in node) {
+              directives.push(node.directive);
+            }
+            i += 1;
           }
-          i += 1;
+
+          if (directives.length > 0) {
+            return {
+              code,
+              ast,
+              map: null,
+              meta: { preserveDirectives: directives },
+            };
+          }
         }
 
-        if (directives.length > 0) {
-          return {
-            code,
-            ast,
-            map: null,
-            meta: { preserveDirectives: directives },
-          };
-        }
+        // Return code and ast to avoid having to re-parse and
+        // `map: null` to preserve source maps since we haven't modified anything
+        return { code, ast, map: null };
       }
-
-      // Return code and ast to avoid having to re-parse and
-      // `map: null` to preserve source maps since we haven't modified anything
-      return { code, ast, map: null };
     },
     // We check if this chunk has a module with extracted directives
     // and add that to the top.
