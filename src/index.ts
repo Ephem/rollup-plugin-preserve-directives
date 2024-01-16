@@ -20,6 +20,7 @@ export function preserveDirectives({
     name: "preserve-directives",
     // Capture directives metadata during the transform phase
     transform(code, id) {
+      // this.parse() does not work on CSS files
       if (!id.endsWith('.css')) {
         const ast = this.parse(code);
         if (ast.type === "Program" && ast.body) {
