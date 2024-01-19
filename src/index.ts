@@ -88,7 +88,7 @@ export function preserveDirectives({
 
           if (chunkHasDirectives) {
             const directiveStrings = chunkHasDirectives
-              .map((directive) => `'${directive}'`)
+              .map((directive) => `"${directive}"`)
               .join(";\n");
 
             const s = new MagicString(code);
