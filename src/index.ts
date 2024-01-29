@@ -12,7 +12,7 @@ type PreserveDirectivesOptions = {
  *
  * @param {Object} options - Plugin options
  * @param {boolean} options.suppressPreserveModulesWarning - Disable the warning when preserveModules is false
- * @param {string[]} options.skipFileTypes - File types to skip from parsing
+ * @param {string[]} options.fileTypesToSkip - File types to skip from parsing
  *
  */
 
