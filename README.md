@@ -59,9 +59,9 @@ export default {
 
 This can be useful when you have a common list of plugins for several builds, where some have `preserveModules: false` and some `true`.
 
-### Skip parsing for specific file types
+### Include / exclude
 
-Some files, like CSS, cannot be parsed for directives. If you want to skip parsing for specific file types, you can pass an array of file extensions to skip. CSS files are skipped by default:
+To exclude certain files from being processed by this plugin, you can use the `include` and `exclude` options. These options take [minimatch globs](https://github.com/motemen/minimatch-cheat-sheet), and can be used like this:
 
 ```js
 import preserveDirectives from "rollup-plugin-preserve-directives";
@@ -70,7 +70,7 @@ export default {
   output: {
     preserveModules: true,
   },
-  plugins: [preserveDirectives({ fileTypesToSkip: ["scss", "pcss"] })],
+  plugins: [preserveDirectives({ exclude: ["**/*.scss", "**/*.pcss"] })],
 };
 ```
 

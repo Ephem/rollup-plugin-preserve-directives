@@ -1,9 +1,11 @@
 import MagicString from "magic-string";
 import type { Plugin } from "rollup";
+import { createFilter } from "@rollup/pluginutils";
 
 type PreserveDirectivesOptions = {
   suppressPreserveModulesWarning?: boolean;
-  fileTypesToSkip?: string[];
+  include?: string[];
+  exclude?: string[];
 };
 
 /**
@@ -12,26 +14,26 @@ type PreserveDirectivesOptions = {
  *
  * @param {Object} options - Plugin options
  * @param {boolean} options.suppressPreserveModulesWarning - Disable the warning when preserveModules is false
- * @param {string[]} options.fileTypesToSkip - File types to skip from parsing
+ * @param {string[]} options.include - Minimatch patterns to include in parsing
+ * @param {string[]} options.exclude - Minimatch patterns to skip from parsing
  *
  */
 
 export function preserveDirectives({
   suppressPreserveModulesWarning,
-  fileTypesToSkip,
+  include = [],
+  exclude = [],
 }: PreserveDirectivesOptions = {}): Plugin {
   // Skip CSS files by default, as this.parse() does not work on them
-  const skipFileTypes = ["css", ...(fileTypesToSkip || [])];
-  const shouldSkip = (id: string) =>
-    skipFileTypes.some((type) => id.endsWith(`.${type}`));
+  const excludePatterns = ["**/*.css", ...exclude];
+  const filter = createFilter(include, excludePatterns);
   return {
     name: "preserve-directives",
     // Capture directives metadata during the transform phase
     transform(code, id) {
-      // Skip files that we can't parse, and that we've been told to skip
-      if (shouldSkip(id)) {
-        return null;
-      }
+      // Skip files that are excluded or that are implicitly excluded by the include pattern
+      if (!filter(id)) return;
+
       const ast = this.parse(code);
       if (ast.type === "Program" && ast.body) {
         const directives: string[] = [];
