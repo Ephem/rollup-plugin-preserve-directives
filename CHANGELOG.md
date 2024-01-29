@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Let user add file types to ignore when parsing (#21).
+
 ## [0.3.1] - 2024-01-19
 
 ### Fixed

@@ -59,6 +59,21 @@ export default {
 
 This can be useful when you have a common list of plugins for several builds, where some have `preserveModules: false` and some `true`.
 
+### Skip parsing for specific file types
+
+Some files, like CSS, cannot be parsed for directives. If you want to skip parsing for specific file types, you can pass an array of file extensions to skip. CSS files are skipped by default:
+
+```js
+import preserveDirectives from "rollup-plugin-preserve-directives";
+
+export default {
+  output: {
+    preserveModules: true,
+  },
+  plugins: [preserveDirectives({ fileTypesToSkip: ["scss", "pcss"] })],
+};
+```
+
 ## Motivation and usecase
 
 While this plugin is generic and works with any directive, the motivator was to be able to build libraries that wants to provide both React Server Components and Client Components without having to use separate entrypoints.

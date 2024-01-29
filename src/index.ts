@@ -3,6 +3,7 @@ import type { Plugin } from "rollup";
 
 type PreserveDirectivesOptions = {
   suppressPreserveModulesWarning?: boolean;
+  fileTypesToSkip?: string[];
 };
 
 /**
@@ -11,49 +12,57 @@ type PreserveDirectivesOptions = {
  *
  * @param {Object} options - Plugin options
  * @param {boolean} options.suppressPreserveModulesWarning - Disable the warning when preserveModules is false
+ * @param {string[]} options.skipFileTypes - File types to skip from parsing
+ *
  */
 
 export function preserveDirectives({
   suppressPreserveModulesWarning,
+  fileTypesToSkip,
 }: PreserveDirectivesOptions = {}): Plugin {
+  // Skip CSS files by default, as this.parse() does not work on them
+  const skipFileTypes = ["css", ...(fileTypesToSkip || [])];
+  const shouldSkip = (id: string) =>
+    skipFileTypes.some((type) => id.endsWith(`.${type}`));
   return {
     name: "preserve-directives",
     // Capture directives metadata during the transform phase
     transform(code, id) {
-      // this.parse() does not work on CSS files
-      if (!id.endsWith('.css')) {
-        const ast = this.parse(code);
-        if (ast.type === "Program" && ast.body) {
-          const directives: string[] = [];
-          let i = 0;
+      // Skip files that we can't parse, and that we've been told to skip
+      if (shouldSkip(id)) {
+        return null;
+      }
+      const ast = this.parse(code);
+      if (ast.type === "Program" && ast.body) {
+        const directives: string[] = [];
+        let i = 0;
 
-          // Nodes in body should never be falsy, but issue #5 tells us otherwise
-          // so just in case we filter them out here
-          const filteredBody = ast.body.filter(Boolean);
+        // Nodes in body should never be falsy, but issue #5 tells us otherwise
+        // so just in case we filter them out here
+        const filteredBody = ast.body.filter(Boolean);
 
-          // .type must be defined according to the spec, but just in case..
-          while (filteredBody[i]?.type === "ExpressionStatement") {
-            const node = filteredBody[i];
-            if ('directive' in node) {
-              directives.push(node.directive);
-            }
-            i += 1;
+        // .type must be defined according to the spec, but just in case..
+        while (filteredBody[i]?.type === "ExpressionStatement") {
+          const node = filteredBody[i];
+          if ("directive" in node) {
+            directives.push(node.directive);
           }
-
-          if (directives.length > 0) {
-            return {
-              code,
-              ast,
-              map: null,
-              meta: { preserveDirectives: directives },
-            };
-          }
+          i += 1;
         }
 
-        // Return code and ast to avoid having to re-parse and
-        // `map: null` to preserve source maps since we haven't modified anything
-        return { code, ast, map: null };
+        if (directives.length > 0) {
+          return {
+            code,
+            ast,
+            map: null,
+            meta: { preserveDirectives: directives },
+          };
+        }
       }
+
+      // Return code and ast to avoid having to re-parse and
+      // `map: null` to preserve source maps since we haven't modified anything
+      return { code, ast, map: null };
     },
     // We check if this chunk has a module with extracted directives
     // and add that to the top.
@@ -105,4 +114,4 @@ export function preserveDirectives({
   };
 }
 
-export default preserveDirectives
+export default preserveDirectives;
