@@ -1,7 +1,7 @@
 {
   "name": "rollup-plugin-preserve-directives",
   "description": "A Rollup plugin to preserve directives like \"use client\" when preserveModules is true.",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "author": "Fredrik Höglund <fredrik.hoglund@gmail.com>",
   "license": "MIT",
   "keywords": [
