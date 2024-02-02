@@ -59,6 +59,21 @@ export default {
 
 This can be useful when you have a common list of plugins for several builds, where some have `preserveModules: false` and some `true`.
 
+### Include / exclude
+
+To exclude certain files from being processed by this plugin, you can use the `include` and `exclude` options. These options take [minimatch globs](https://github.com/motemen/minimatch-cheat-sheet), and can be used like this:
+
+```js
+import preserveDirectives from "rollup-plugin-preserve-directives";
+
+export default {
+  output: {
+    preserveModules: true,
+  },
+  plugins: [preserveDirectives({ exclude: ["**/*.scss", "**/*.pcss"] })],
+};
+```
+
 ## Motivation and usecase
 
 While this plugin is generic and works with any directive, the motivator was to be able to build libraries that wants to provide both React Server Components and Client Components without having to use separate entrypoints.

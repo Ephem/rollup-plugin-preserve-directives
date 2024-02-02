@@ -42,6 +42,7 @@
     "rollup": "2.x || 3.x || 4.x"
   },
   "dependencies": {
+    "@rollup/pluginutils": "^5.1.0",
     "magic-string": "^0.30.5"
   },
   "devDependencies": {

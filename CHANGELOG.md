@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Support include and exclude options (#21).
+
 ## [0.3.1] - 2024-01-19
 
 ### Fixed

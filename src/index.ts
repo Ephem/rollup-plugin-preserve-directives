@@ -1,8 +1,11 @@
 import MagicString from "magic-string";
 import type { Plugin } from "rollup";
+import { createFilter } from "@rollup/pluginutils";
 
 type PreserveDirectivesOptions = {
   suppressPreserveModulesWarning?: boolean;
+  include?: string[];
+  exclude?: string[];
 };
 
 /**
@@ -11,49 +14,57 @@ type PreserveDirectivesOptions = {
  *
  * @param {Object} options - Plugin options
  * @param {boolean} options.suppressPreserveModulesWarning - Disable the warning when preserveModules is false
+ * @param {string[]} options.include - Minimatch patterns to include in parsing
+ * @param {string[]} options.exclude - Minimatch patterns to skip from parsing
+ *
  */
 
 export function preserveDirectives({
   suppressPreserveModulesWarning,
+  include = [],
+  exclude = [],
 }: PreserveDirectivesOptions = {}): Plugin {
+  // Skip CSS files by default, as this.parse() does not work on them
+  const excludePatterns = ["**/*.css", ...exclude];
+  const filter = createFilter(include, excludePatterns);
   return {
     name: "preserve-directives",
     // Capture directives metadata during the transform phase
     transform(code, id) {
-      // this.parse() does not work on CSS files
-      if (!id.endsWith('.css')) {
-        const ast = this.parse(code);
-        if (ast.type === "Program" && ast.body) {
-          const directives: string[] = [];
-          let i = 0;
+      // Skip files that are excluded or that are implicitly excluded by the include pattern
+      if (!filter(id)) return;
 
-          // Nodes in body should never be falsy, but issue #5 tells us otherwise
-          // so just in case we filter them out here
-          const filteredBody = ast.body.filter(Boolean);
+      const ast = this.parse(code);
+      if (ast.type === "Program" && ast.body) {
+        const directives: string[] = [];
+        let i = 0;
 
-          // .type must be defined according to the spec, but just in case..
-          while (filteredBody[i]?.type === "ExpressionStatement") {
-            const node = filteredBody[i];
-            if ('directive' in node) {
-              directives.push(node.directive);
-            }
-            i += 1;
+        // Nodes in body should never be falsy, but issue #5 tells us otherwise
+        // so just in case we filter them out here
+        const filteredBody = ast.body.filter(Boolean);
+
+        // .type must be defined according to the spec, but just in case..
+        while (filteredBody[i]?.type === "ExpressionStatement") {
+          const node = filteredBody[i];
+          if ("directive" in node) {
+            directives.push(node.directive);
           }
-
-          if (directives.length > 0) {
-            return {
-              code,
-              ast,
-              map: null,
-              meta: { preserveDirectives: directives },
-            };
-          }
+          i += 1;
         }
 
-        // Return code and ast to avoid having to re-parse and
-        // `map: null` to preserve source maps since we haven't modified anything
-        return { code, ast, map: null };
+        if (directives.length > 0) {
+          return {
+            code,
+            ast,
+            map: null,
+            meta: { preserveDirectives: directives },
+          };
+        }
       }
+
+      // Return code and ast to avoid having to re-parse and
+      // `map: null` to preserve source maps since we haven't modified anything
+      return { code, ast, map: null };
     },
     // We check if this chunk has a module with extracted directives
     // and add that to the top.
@@ -105,4 +116,4 @@ export function preserveDirectives({
   };
 }
 
-export default preserveDirectives
+export default preserveDirectives;
