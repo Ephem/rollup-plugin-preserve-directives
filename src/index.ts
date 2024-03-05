@@ -2,7 +2,7 @@ import MagicString from "magic-string";
 import type { Plugin } from "rollup";
 import { createFilter } from "@rollup/pluginutils";
 
-type PreserveDirectivesOptions = {
+export type PreserveDirectivesOptions = {
   suppressPreserveModulesWarning?: boolean;
   include?: string[];
   exclude?: string[];
